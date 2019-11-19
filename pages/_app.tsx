@@ -1,37 +1,31 @@
-import React from "react";
+import { GlobalStyles } from "lib/styles";
+import { theme } from "lib/theme";
+import withUrqlClient from "lib/with-urql-client";
 import App, { Container } from "next/app";
-import Meta from "../components/Meta";
-import { createGlobalStyle, ThemeProvider } from "styled-components";
+import React from "react";
+import { ThemeProvider } from "styled-components";
+import { Normalize } from "styled-normalize";
+import { Client as UrqlClient, Provider as UrqlProvider } from "urql";
+import Meta, { DefaultMeta } from "../components/Meta";
 
-export const theme = {
-  colors: {
-    hoscoBlue: "#1898c2"
-  }
-};
-
-const GlobalStyles = createGlobalStyle`
-* {
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial,
-                    sans-serif;
-                  transition: all linear 0.1s;
-                  margin: 0;
-                  padding: 0;
-                  box-sizing: border-box;
-                }
-`;
-
-export default class MyApp extends App {
+class MyApp extends App<{ urqlClient: UrqlClient }> {
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, urqlClient } = this.props;
 
     return (
-      <ThemeProvider theme={theme}>
-        <Container>
-          <GlobalStyles />
-          <Meta />
-          <Component {...pageProps} />
-        </Container>
-      </ThemeProvider>
+      <UrqlProvider value={urqlClient}>
+        <ThemeProvider theme={theme}>
+          <Container>
+            <GlobalStyles />
+            <Normalize />
+            <DefaultMeta />
+            <Meta />
+            <Component {...pageProps} />
+          </Container>
+        </ThemeProvider>
+      </UrqlProvider>
     );
   }
 }
+
+export default withUrqlClient(MyApp);

@@ -1,0 +1,4 @@
+
+
+## extensions *.* Dockerfile LICENSE !*.js !*.ts !*.tsx ## same as in .gitignore /.next /build /locales/**/*.missing.json /node_modules
+
