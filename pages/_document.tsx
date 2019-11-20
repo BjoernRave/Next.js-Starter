@@ -1,4 +1,10 @@
-import Document, { DocumentContext, DocumentInitialProps } from "next/document";
+import Document, {
+  DocumentContext,
+  DocumentInitialProps,
+  Head,
+  Main,
+  NextScript
+} from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
 export default class MyDocument extends Document {
@@ -7,7 +13,6 @@ export default class MyDocument extends Document {
   ): Promise<DocumentInitialProps> {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
-
     try {
       ctx.renderPage = () =>
         originalRenderPage({
@@ -17,15 +22,27 @@ export default class MyDocument extends Document {
       const initialProps = await Document.getInitialProps(ctx);
       return {
         ...initialProps,
-        styles: [
+        styles: (
           <>
             {initialProps.styles}
             {sheet.getStyleElement()}
           </>
-        ]
+        )
       };
     } finally {
       sheet.seal();
     }
+  }
+
+  render() {
+    return (
+      <html lang="en">
+        <Head />
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </html>
+    );
   }
 }
