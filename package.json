@@ -7,69 +7,49 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "export": "next export",
-    "analyze": "ANALYZE=true yarn build",
-    "generate": "npm -s run generate:prisma && npm -s run generate:nexus && graphql-codegen --config codegen.yml",
-    "generate:prisma": "prisma2 generate",
-    "generate:nexus": "ts-node --project tsconfig.prisma.json --transpile-only ./pages/api/src/schema",
-    "postinstall": "npm -s run generate"
+    "analyze": "ANALYZE=true yarn build"
   },
   "dependencies": {
-    "@prisma/photon": "2.0.0-preview019",
-    "@urql/exchange-graphcache": "^2.0.0",
-    "apollo-server-micro": "^2.9.15",
-    "bcryptjs": "2.4.3",
-    "graphql": "^14.5.8",
-    "graphql-middleware": "latest",
-    "graphql-shield": "7.0.7",
-    "graphql-yoga": "1.18.3",
+    "@urql/exchange-graphcache": "^2.1.1",
+    "graphql": "^14.6.0",
     "isomorphic-unfetch": "^3.0.0",
-    "jsonwebtoken": "8.5.1",
-    "next": "^9.1.7",
-    "nexus": "0.12.0-rc.5",
-    "nexus-prisma": "0.6.1",
-    "nookies": "^2.0.8",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-ssr-prepass": "^1.0.8",
-    "styled-components": "^4.4.1",
-    "styled-normalize": "^8.0.6",
-    "urql": "^1.7.0"
+    "next": "^9.2.2",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-ssr-prepass": "^1.1.2",
+    "styled-components": "^5.0.1",
+    "styled-normalize": "^8.0.7",
+    "urql": "^1.9.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.11.2",
-    "@graphql-codegen/typescript": "^1.11.2",
-    "@graphql-codegen/typescript-operations": "^1.11.2",
-    "@graphql-codegen/typescript-urql": "^1.11.2",
-    "@next/bundle-analyzer": "^9.1.7",
-    "@prisma/sdk": "0.0.125",
-    "@types/bcryptjs": "2.4.2",
-    "@types/jsonwebtoken": "8.3.5",
-    "@types/node": "^13.1.5",
-    "@types/react": "^16.9.17",
-    "@types/react-dom": "^16.9.4",
-    "@types/styled-components": "^4.4.2",
-    "@types/ws": "6.0.4",
-    "@typescript-eslint/eslint-plugin": "^2.15.0",
-    "@typescript-eslint/parser": "^2.15.0",
+    "@next/bundle-analyzer": "^9.2.2",
+    "@types/node": "^13.7.7",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "@types/styled-components": "^5.0.1",
     "babel-plugin-graphql-tag": "^2.5.0",
     "babel-plugin-inline-import": "^3.0.0",
-    "babel-plugin-styled-components": "^1.10.6",
+    "babel-plugin-styled-components": "^1.10.7",
     "dotenv": "^8.2.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.9.0",
-    "eslint-plugin-graphql": "^3.1.1",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-json": "^2.0.1",
-    "eslint-plugin-react": "^7.17.0",
-    "eslint-plugin-react-hooks": "^2.3.0",
     "prettier": "^1.19.1",
-    "prisma2": "2.0.0-preview019",
-    "ts-node": "8.5.4",
-    "ts-node-dev": "1.0.0-pre.44",
-    "typescript": "^3.7.4"
+    "typescript": "^3.8.3"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "babel": {
+    "presets": [
+      "next/babel"
+    ],
+    "plugins": [
+      "graphql-tag",
+      "inline-import",
+      [
+        "styled-components",
+        {
+          "ssr": true
+        }
+      ]
+    ]
+  }
 }

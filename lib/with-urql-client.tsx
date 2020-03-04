@@ -1,73 +1,61 @@
-import "isomorphic-fetch";
-import { AppContext } from "next/app";
-import { parseCookies } from "nookies";
-import React from "react";
-import ssrPrepass from "react-ssr-prepass";
-import initUrqlClient from "./init-urql-client";
-import { isServer } from "./utils";
+import { AppContext } from 'next/app'
+import React from 'react'
+import ssrPrepass from 'react-ssr-prepass'
+import { Client, Provider } from 'urql'
+import initUrqlClient from './init-urql-client'
+import { isServer } from './utils'
 
-const withUrqlClient = App => {
-  return class WithUrql extends React.Component {
-    urqlClient: any;
-    cookies: any;
+const withUrqlClient = Page => {
+  const withUrql = props => {
+    const urqlClient = React.useMemo(
+      () =>
+        props.urqlClient ||
+        (props.pageProps && props.pageProps.urqlClient) ||
+        initUrqlClient(props.urqlState)[0],
+      [props.urqlClient, props.pageProps, props.urqlState]
+    ) as Client
 
-    static async getInitialProps(ctx: AppContext) {
-      const { AppTree } = ctx;
-      const cookies = parseCookies(ctx.ctx);
-      const [urqlClient, ssrCache] = initUrqlClient(
-        null,
-        cookies.Authorization
-      );
-      ctx.ctx.urqlClient = urqlClient;
+    return (
+      <Provider value={urqlClient}>
+        <Page {...props} urqlClient={urqlClient} />
+      </Provider>
+    )
+  }
 
-      // Run the wrapped component's getInitialProps function
-      let appProps = {};
-      if (App.getInitialProps) {
-        appProps = await App.getInitialProps(ctx);
-      }
+  withUrql.getInitialProps = async (ctx: AppContext) => {
+    const { AppTree } = ctx
 
-      // getInitialProps is universal, but we only want
-      // to run server-side rendered suspense on the server
-      if (!isServer) {
-        return appProps;
-      }
+    const [urqlClient, ssrCache] = initUrqlClient(null)
 
-      // Run suspense and hence all urql queries
-      await ssrPrepass(
-        //@ts-ignore
-        <AppTree {...appProps} urqlClient={urqlClient} />
-      );
+    ctx.ctx.urqlClient = urqlClient
 
-      // Extract query data from the Apollo store
-      // Extract the SSR query data from urql's SSR cache
-      const urqlState = ssrCache.extractData();
+    // Run the wrapped component's getInitialProps function
+    let pageProps = {}
+    if (Page.getInitialProps) pageProps = await Page.getInitialProps(ctx)
 
-      return {
-        ...appProps,
-        urqlState,
-        cookies
-      };
+    if (!isServer) return { ...pageProps }
+
+    // Run suspense and hence all urql queries
+    await ssrPrepass(
+      <AppTree
+        pageProps={{
+          ...pageProps,
+          urqlClient
+        }}
+      />
+    )
+
+    // Extract query data from the urql store
+    // Extract the SSR query data from urql's SSR cache
+    const urqlState = ssrCache.extractData()
+
+    return {
+      ...pageProps,
+      urqlState
     }
+  }
 
-    constructor(props) {
-      super(props);
+  return withUrql
+}
 
-      if (props.urqlClient) {
-        this.urqlClient = props.urqlClient;
-      } else {
-        // Create the urql client and rehydrate the prefetched data
-        const [urqlClient] = initUrqlClient(
-          props.urqlState,
-          props.cookies.Authorization
-        );
-        this.urqlClient = urqlClient;
-      }
-    }
-
-    render() {
-      return <App {...this.props} urqlClient={this.urqlClient} />;
-    }
-  };
-};
-
-export default withUrqlClient;
+export default withUrqlClient

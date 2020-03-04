@@ -1,30 +1,24 @@
-import { cacheExchange } from "@urql/exchange-graphcache";
-import "isomorphic-fetch";
-import { createClient, dedupExchange, fetchExchange, ssrExchange } from "urql";
-import { isServer } from "./utils";
+import { cacheExchange } from '@urql/exchange-graphcache'
+import fetch from 'isomorphic-unfetch'
+import { createClient, dedupExchange, fetchExchange, ssrExchange } from 'urql'
+import { isServer } from './utils'
 
-let urqlClient: any;
-let ssrCache: any;
+let urqlClient: any
+let ssrCache: any
 
-export default function initUrqlClient(initialState: any, token: string) {
+export default function initUrqlClient(initialState: any) {
   // Create a new client for every server-side rendered request to reset its state
   // for each rendered page
   // Reuse the client on the client-side however
 
-  if (isServer || !urqlClient || !token) {
-    ssrCache = ssrExchange({ initialState });
+  if (isServer || !urqlClient) {
+    ssrCache = ssrExchange({ initialState })
 
     urqlClient = createClient({
-      url: `http://localhost:3000/api/graphql`,
-      // Active suspense mode on the server-side
-      ...(token && {
-        fetchOptions: {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      }),
+      url: ``,
+
       suspense: isServer,
+      fetch: fetch,
       exchanges: [
         dedupExchange,
         cacheExchange(),
@@ -33,9 +27,9 @@ export default function initUrqlClient(initialState: any, token: string) {
         ssrCache,
         fetchExchange
       ]
-    });
+    })
   }
 
   // Return both the cache and the client
-  return [urqlClient, ssrCache];
+  return [urqlClient, ssrCache]
 }
