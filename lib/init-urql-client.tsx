@@ -15,7 +15,7 @@ export default function initUrqlClient(initialState: any) {
     ssrCache = ssrExchange({ initialState })
 
     urqlClient = createClient({
-      url: ``,
+      url: `${process.env.BACKEND_URL}/api/grapphql`,
 
       suspense: isServer,
       fetch: fetch,
@@ -25,8 +25,8 @@ export default function initUrqlClient(initialState: any) {
         // Put the exchange returned by calling ssrExchange after your cacheExchange,
         // but before any asynchronous exchanges like the fetchExchange:
         ssrCache,
-        fetchExchange
-      ]
+        fetchExchange,
+      ],
     })
   }
 
