@@ -4,7 +4,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 module.exports = withBundleAnalyzer({
   env: {
-    BACKEND_URL:
-      process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4000',
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
 })
