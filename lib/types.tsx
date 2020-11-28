@@ -1,18 +1,8 @@
-import "next";
-import "styled-components";
-import { Client } from "urql";
-import { borderRadiusType, boxShadowsType, colorType } from "./theme";
+import 'next'
+import { Client } from 'urql'
 
-declare module "styled-components" {
-  export interface DefaultTheme {
-    colors: colorType;
-    boxShadows: boxShadowsType;
-    borderRadius: borderRadiusType;
-  }
-}
-
-declare module "next" {
+declare module 'next' {
   export interface NextPageContext {
-    urqlClient: Client;
+    urqlClient: Client
   }
 }

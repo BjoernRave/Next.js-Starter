@@ -1,15 +1,14 @@
-import { GlobalStyles } from 'lib/styles'
-import { theme } from 'lib/theme'
-import { ThemeProvider } from 'styled-components'
-import { Normalize } from 'styled-normalize'
+import { NotificationProvider, NotificationType } from 'components/Notification'
+import { useState } from 'react'
+import '../styles.css'
 
 const MyApp = ({ Component, pageProps }) => {
+  const [notification, setNotification] = useState<NotificationType>(null)
+
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      <Normalize />
+    <NotificationProvider value={{ notification, setNotification }}>
       <Component {...pageProps} />
-    </ThemeProvider>
+    </NotificationProvider>
   )
 }
 
