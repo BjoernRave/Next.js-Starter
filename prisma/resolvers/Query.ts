@@ -1,5 +1,7 @@
 import { queryType } from '@nexus/schema'
 
 export const Query = queryType({
-  definition(t) {},
+  definition(t) {
+    t.crud.users()
+  },
 })

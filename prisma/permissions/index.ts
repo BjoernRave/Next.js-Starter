@@ -1,9 +1,14 @@
-import { deny, shield } from 'graphql-shield'
+import { allow, deny, shield } from 'graphql-shield'
 
 export const permissions = shield(
   {
-    Query: {},
-    Mutation: {},
+    Query: {
+      users: allow,
+    },
+    Mutation: {
+      createOneUser: allow,
+    },
+    User: allow,
   },
   {
     fallbackRule: deny,
