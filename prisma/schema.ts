@@ -1,28 +1,34 @@
-import { declarativeWrappingPlugin, makeSchema } from '@nexus/schema'
-import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
+import { declarativeWrappingPlugin, makeSchema } from 'nexus'
+import { nexusPrisma } from 'nexus-plugin-prisma'
+import * as path from 'path'
 import * as types from './resolvers'
 
 export const schema = makeSchema({
   types,
   plugins: [
-    nexusSchemaPrisma({ experimentalCRUD: true }),
+    nexusPrisma({ experimentalCRUD: true, paginationStrategy: 'prisma' }),
     declarativeWrappingPlugin(),
   ],
   outputs: {
-    schema: __dirname + '/generated/schema.graphql',
-    typegen: __dirname + '/generated/nexus.ts',
+    typegen: path.join(
+      process.cwd(),
+      'prisma',
+      'generated',
+      'nexus-typegen.ts'
+    ),
+    schema: path.join(process.cwd(), 'prisma', 'generated', 'schema.graphql'),
   },
-  typegenAutoConfig: {
-    sources: [
+
+  contextType: {
+    module: path.join(process.cwd(), 'prisma', 'context.ts'),
+    export: 'Context',
+  },
+  sourceTypes: {
+    modules: [
       {
-        source: '@prisma/client',
-        alias: 'client',
-      },
-      {
-        source: require.resolve('./context'),
-        alias: 'Context',
+        module: '@prisma/client',
+        alias: 'prisma',
       },
     ],
-    contextType: 'Context.Context',
   },
 })

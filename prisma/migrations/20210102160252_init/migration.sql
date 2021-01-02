@@ -12,6 +12,7 @@ CREATE TABLE "accounts" (
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
 -- CreateTable
 CREATE TABLE "sessions" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -22,6 +23,7 @@ CREATE TABLE "sessions" (
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -32,6 +34,7 @@ CREATE TABLE "users" (
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
 -- CreateTable
 CREATE TABLE "verification_requests" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -41,19 +44,27 @@ CREATE TABLE "verification_requests" (
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
 -- CreateIndex
 CREATE UNIQUE INDEX "accounts.compound_id_unique" ON "accounts"("compound_id");
+
 -- CreateIndex
 CREATE INDEX "providerAccountId" ON "accounts"("provider_account_id");
+
 -- CreateIndex
 CREATE INDEX "providerId" ON "accounts"("provider_id");
+
 -- CreateIndex
 CREATE INDEX "userId" ON "accounts"("user_id");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "sessions.session_token_unique" ON "sessions"("session_token");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "sessions.access_token_unique" ON "sessions"("access_token");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users.email_unique" ON "users"("email");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "verification_requests.token_unique" ON "verification_requests"("token");
